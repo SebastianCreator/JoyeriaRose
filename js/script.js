@@ -1,11 +1,11 @@
 // Datos de productos - más modernos
 const products = [
     { id: 1, name: 'Anillo Oro 18K', price: 30000, image: 'Img/anillo.jpg'},
-    { id: 2, name: 'Collar Perlas', price: 25000, image: 'https://images.unsplash.com/photo-1587831996218-8f143a633720?w=400&h=300&fit=crop' },
+    { id: 2, name: 'Collar Perlas', price: 25000, image: 'Img/collar.jpg' },
     { id: 3, name: 'Aretes Diamante', price: 30000, image: 'Img/aretes.jpg' },
-    { id: 4, name: 'Pulsera Plata', price: 80000, image: 'https://images.unsplash.com/photo-1558997996-1593fc4e8ba5?w=400&h=300&fit=crop' },
+    { id: 4, name: 'Pulsera Plata', price: 80000, image: 'Img/pulsera.jpg' },
     { id: 5, name: 'Cadena Oro Blanco', price: 20000, image: 'Img/cadena.jpg' },
-    { id: 6, name: 'Pendientes Esmeralda', price: 18000, image: 'https://images.unsplash.com/photo-1575807081528-13d72034ec44?w=400&h=300&fit=crop' }
+    { id: 6, name: 'Pendientes Esmeralda', price: 18000, image: 'Img/pendientes.jpg' }
 ];
 
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
