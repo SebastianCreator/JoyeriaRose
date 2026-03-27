@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joyería Rose</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="Img/favicon.png" type="image/png">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Joyería <span>Rose</span></div>
+                <div class="logoimg"><img src="Img/logo.png" alt=""></div>
+                <button class="cart-btn" id="cartBtn">🛒 0</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">            
+            <h1>Joyas que brillan con tu estilo único</h1>
+            <p>Haz tu pedido en segundos por WhatsApp</p>
+        </div>
+    </section>
+
+    <section class="products-section">
+        <div class="container">
+            <h2 class="section-title">Nuestras Colecciones</h2>
+            <div class="product-grid" id="productGrid">
+                <!-- Dynamic products -->
+            </div>
+        </div>
+    </section>
+
+    <section class="cart-section hidden" id="cartSection">
+        <div class="container">
+            <h3 class="section-subtitle">🛒 Tu Carrito</h3>
+            <div id="cartItems"></div>
+            <div class="total-display" id="total">$0</div>
+            <button id="clearCart" class="clear-btn">Vaciar Carrito</button>
+        </div>
+    </section>
+
+    <section class="order-section hidden" id="orderSection">
+        <div class="container">
+            <h3 class="section-subtitle">📋 Detalles del Pedido</h3>
+            <form id="orderForm">
+                <input type="text" name="name" placeholder="Tu Nombre Completo *" required>
+                <input type="tel" name="phone" placeholder="Teléfono de Contacto *" required>
+                <textarea name="address" placeholder="Dirección Completa de Envío *" required></textarea>
+                <button type="submit" class="submit-btn"> Enviar por WhatsApp</button>
+            </form>
+            <p style="text-align: center; margin-top: 1rem; opacity: 0.8;">
+                📱 <strong>WhatsApp: +57 320-609 41 26</strong>
+            </p>
+        </div>
+    </section>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
