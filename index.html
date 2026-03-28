@@ -11,12 +11,27 @@
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">Joyería <span>Rose</span></div>
+                <div class="logo">Rose</div>
                 <div class="logoimg"><img src="Img/Logo2.jpeg" alt=""></div>
                 <button class="cart-btn" id="cartBtn">🛒 0</button>
             </div>
         </div>
     </header>
+
+    <menu class="categories">
+        <div class="container-categories">
+            <ul class="subcategory-list">
+                <button class="category-btn" data-category="todos">Accesorios</button>
+                 <li class="hidden-sub"><button class="category-btn" data-category="minoristas">Minoristas</button></li>
+                <li class="hidden-sub"><button class="category-btn" data-category="mayoristas">Mayoristas</button></li>
+            </ul>
+            <button class="category-btn" data-category="Skincare">Cuidados de la Piel</button>
+        </div>
+    </menu>
+
+    <div class="promo-banner">
+        <p>✨ Envío Gratis en Pedidos Mayores a $100.000 ✨</p>
+    </div>
 
     <section class="hero">
         <div class="container">            
@@ -27,7 +42,7 @@
 
     <section class="products-section">
         <div class="container">
-            <h2 class="section-title">Nuestras Colecciones</h2>
+            <h2 class="section-title">Nuestros Productos</h2>
             <div class="product-grid" id="productGrid">
                 <!-- Dynamic products -->
             </div>

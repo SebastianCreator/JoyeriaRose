@@ -1,18 +1,23 @@
-# TODO: Joyería Web Project
+# TODO: Implementar Subcategoría Escondida en Accesorios
 
-## Plan Breakdown & Progress Tracker
+## Plan Aprobado
+✅ **Paso 1**: Crear TODO.md (completado)
 
-### 1. Create project structure and TODO.md ✅ (Done)
-### 2. Create index.html (product showcase, form, WhatsApp button) ✅
-### 3. Create styles.css (styling) ✅
-### 4. Create script.js (cart logic con eliminar items, WhatsApp integration) ✅
-### 5. [Optional] Create products.json for data
-### 6. Test: Open index.html and verify order -> WhatsApp
-### 5. ✅ Modern UI: css/modern-styles.css, js/modern-script.js, index-modern.html (glassmorphism, animations, Tailwind-free)
-### 6. Test: Open index-modern.html 
-### 7. Customize: Update phone/products/images en js/modern-script.js
+## Pasos Completados:
+✅ **Paso 1**: Crear TODO.md  
+✅ **Paso 2**: Actualizar js/script.js  
+  - Propiedad `category` agregada  
+  - `filterProducts()` implementada  
+  - Event listeners para categorías  
+  - 3 nuevos productos "exclusivos"  
+✅ **Paso 3**: Actualizar index.html  
+  - Botón "Todos" y "Exclusivos ✨" (hidden-sub) agregados  
+✅ **Paso 4**: Actualizar css/styles.css  
+  - Estilos `.hidden-sub` (hover toggle)  
+  - Clase `.active` para categorías seleccionadas  
+  - Transiciones para grid filtering  
 
-¡Versión moderna lista! Usa index-modern.html
+## Pasos Pendientes:
+- [ ] **Paso 5**: Verificar funcionalidad en browser  
 
-Updated as steps complete.
-
+**Estado**: Ediciones completadas. Listo para testing y finalización.

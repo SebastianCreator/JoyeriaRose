@@ -1,14 +1,20 @@
-// Datos de productos - más modernos
+// Datos de productos - con categorías (minoristas, mayoristas, exclusivos)
 const products = [
-    { id: 1, name: 'Anillo Oro 18K', price: 30000, image: 'Img/anillo.jpg'},
-    { id: 2, name: 'Collar Perlas', price: 25000, image: 'Img/collar.jpg' },
-    { id: 3, name: 'Aretes Diamante', price: 30000, image: 'Img/aretes.jpg' },
-    { id: 4, name: 'Pulsera Plata', price: 80000, image: 'Img/pulsera.jpg' },
-    { id: 5, name: 'Cadena Oro Blanco', price: 20000, image: 'Img/cadena.jpg' },
-    { id: 6, name: 'Pendientes Esmeralda', price: 18000, image: 'Img/pendientes.jpg' }
+    { id: 1, name: 'Anillo Oro 18K', price: 30000, image: 'Img/anillo.jpg', category: 'minoristas'},
+    { id: 2, name: 'Collar Perlas', price: 25000, image: 'Img/collar.jpg', category: 'minoristas' },
+    { id: 3, name: 'Aretes Diamante', price: 30000, image: 'Img/aretes.jpg', category: 'minoristas' },
+    { id: 4, name: 'Pulsera Plata', price: 80000, image: 'Img/pulsera.jpg', category: 'minoristas' },
+    { id: 5, name: 'Cadena Oro Blanco', price: 20000, image: 'Img/cadena.jpg', category: 'minoristas' },
+    { id: 6, name: 'Pendientes Esmeralda', price: 18000, image: 'Img/pendientes.jpg', category: 'minoristas' },
+    // Nuevos productos para subcategoría exclusiva (hidden)
+    { id: 7, name: 'Combo Anillo + Aretes', price: 550000, image: 'Img/anillo.jpg', category: 'mayoristas' },
+    { id: 8, name: 'Oferta Cadena + Collar', price: 420000, image: 'Img/cadena.jpg', category: 'mayoristas' },
+    { id: 9, name: 'Set Premium Oro 18K', price: 120000, image: 'Img/collar.jpg', category: 'mayoristas' }
 ];
 
+
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
+let activeCategory = 'accesorios'; // Categoría activa por defecto
 const WHATSAPP_PHONE = '573206094126'; // Cambia aquí
 
 // DOM Elements
@@ -21,7 +27,7 @@ const totalEl = document.querySelector('#total');
 const orderForm = document.querySelector('#orderForm');
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderProducts();
+    renderProducts(); // Inicial: todos los accesorios
     renderCart();
     setupEventListeners();
     
@@ -43,8 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function renderProducts() {
-    productGrid.innerHTML = products.map(product => `
+function filterProducts(category) {
+    if (category === 'accesorios' || category === 'todos' || !category) {
+        return products; // Mostrar todos los accesorios
+    }
+    return products.filter(p => p.category === category);
+}
+
+function renderProducts(productsToRender = products) {
+    productGrid.innerHTML = productsToRender.map(product => `
         <div class="product-card">
             <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
             <div class="product-info">
@@ -56,7 +69,23 @@ function renderProducts() {
     `).join('');
 }
 
+function updateActiveCategory(btn) {
+    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+}
+
 function setupEventListeners() {
+    // Category filtering
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const category = btn.dataset.category;
+            activeCategory = category;
+            const filtered = filterProducts(category);
+            renderProducts(filtered);
+            updateActiveCategory(btn);
+        });
+    });
+
     // Universal click handler
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('add-btn')) addToCart(parseInt(e.target.dataset.id));
