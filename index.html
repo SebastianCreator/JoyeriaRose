@@ -71,6 +71,25 @@
     <section class="products-section" id="products">
         <div class="container">
             <h2 class="section-title">Nuestros Productos</h2>
+            
+            <div class="filters-container">
+                <div class="filter-group">
+                    <label>Ordenar por:</label>
+                    <select id="sortBy">
+                        <option value="default">Destacados</option>
+                        <option value="price-asc">Menor Precio</option>
+                        <option value="price-desc">Mayor Precio</option>
+                        <option value="discount">Mayor Descuento</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>Rango de Precio:</label>
+                    <input type="range" id="priceFilter" min="0" max="550000" step="10000" value="550000">
+                    <span id="priceValue">Hasta $550.000</span>
+                </div>
+            </div>
+
             <div class="product-grid" id="productGrid">
                 <!-- Dynamic products -->
             </div>
