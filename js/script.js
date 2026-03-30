@@ -6,16 +6,15 @@ const products = [
     { id: 4, name: 'Pulsera Plata', price: 80000, image: 'Img/pulsera.jpg', category: 'minoristas' },
     { id: 5, name: 'Cadena Oro Blanco', price: 20000, image: 'Img/cadena.jpg', category: 'minoristas' },
     { id: 6, name: 'Pendientes Esmeralda', price: 18000, image: 'Img/pendientes.jpg', category: 'minoristas' },
-    // Nuevos productos para subcategoría exclusiva (hidden)
     { id: 7, name: 'Combo Anillo + Aretes', price: 550000, image: 'Img/anillo.jpg', category: 'mayoristas' },
     { id: 8, name: 'Oferta Cadena + Collar', price: 420000, image: 'Img/cadena.jpg', category: 'mayoristas' },
-    { id: 9, name: 'Set Premium Oro 18K', price: 120000, image: 'Img/collar.jpg', category: 'mayoristas' }
+    { id: 9, name: 'Set Premium Oro 18K', price: 120000, image: 'Img/collar.jpg', category: 'mayoristas' },
+    { id: 10, name: 'Mascarilla de puntos negros', price: 50000, image: 'Img/mascarilla.jpg', category: 'skincare' },
 ];
 
-
 let cart = JSON.parse(localStorage.getItem('cart')) || [];
-let activeCategory = 'accesorios'; // Categoría activa por defecto
-const WHATSAPP_PHONE = '573206094126'; // Cambia aquí
+let activeCategory = 'accesorios';
+const WHATSAPP_PHONE = '573206094126';
 
 // DOM Elements
 const cartBtn = document.querySelector('.cart-btn');
@@ -25,9 +24,12 @@ const productGrid = document.querySelector('.product-grid');
 const cartItemsEl = document.querySelector('#cartItems');
 const totalEl = document.querySelector('#total');
 const orderForm = document.querySelector('#orderForm');
+const searchInput = document.querySelector('#searchInput');
+const clearSearchBtn = document.querySelector('#clearSearch');
+const noResultsEl = document.querySelector('#noResults');
 
 document.addEventListener('DOMContentLoaded', () => {
-    renderProducts(); // Inicial: todos los accesorios
+    renderProducts();
     renderCart();
     setupEventListeners();
     
@@ -41,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     
-    document.querySelectorAll('.product-card, .cart-section, .order-section').forEach(el => {
+    document.querySelectorAll('.product-card, .cart-section, .order-section, .highlight-card, .payment-card').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(30px)';
         el.style.transition = 'all 0.6s ease';
@@ -50,8 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function filterProducts(category) {
-    if (category === 'accesorios' || category === 'todos' || !category) {
-        return products; // Mostrar todos los accesorios
+    if (category === 'todos' || !category) {
+        return products;
     }
     return products.filter(p => p.category === category);
 }
@@ -62,7 +64,7 @@ function renderProducts(productsToRender = products) {
             <img src="${product.image}" alt="${product.name}" class="product-image" loading="lazy">
             <div class="product-info">
                 <h3 class="product-title">${product.name}</h3>
-                <div class="product-price">$${product.price}</div>
+                <div class="product-price">$${product.price.toLocaleString()}</div>
                 <button class="add-btn" data-id="${product.id}">Agregar</button>
             </div>
         </div>
@@ -75,6 +77,59 @@ function updateActiveCategory(btn) {
 }
 
 function setupEventListeners() {
+    // Dropdown Accesorios
+    const accesoriosBtn = document.getElementById('accesoriosBtn');
+    const accesoriosMenu = document.getElementById('accesoriosMenu');
+    
+    if (accesoriosBtn && accesoriosMenu) {
+        accesoriosBtn.addEventListener('click', () => {
+            accesoriosMenu.classList.toggle('open');
+        });
+        
+        // Cerrar dropdown al seleccionar una subcategoría
+        document.querySelectorAll('.subcategory-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                accesoriosMenu.classList.remove('open');
+            });
+        });
+    }
+    
+    // Cerrar dropdown al hacer click fuera
+    document.addEventListener('click', (e) => {
+        if (accesoriosMenu && !accesoriosBtn.contains(e.target) && !accesoriosMenu.contains(e.target)) {
+            accesoriosMenu.classList.remove('open');
+        }
+    });
+
+    // Search functionality
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            if (query) {
+                const filtered = products.filter(p => 
+                    p.name.toLowerCase().includes(query) || 
+                    p.category.toLowerCase().includes(query)
+                );
+                renderProducts(filtered);
+                noResultsEl.classList.toggle('hidden', filtered.length > 0);
+            } else {
+                renderProducts();
+                noResultsEl.classList.add('hidden');
+            }
+        });
+    }
+
+    // Clear search
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', () => {
+            if (searchInput) {
+                searchInput.value = '';
+                renderProducts();
+                noResultsEl.classList.add('hidden');
+            }
+        });
+    }
+
     // Category filtering
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -83,6 +138,8 @@ function setupEventListeners() {
             const filtered = filterProducts(category);
             renderProducts(filtered);
             updateActiveCategory(btn);
+            if (searchInput) searchInput.value = '';
+            noResultsEl.classList.add('hidden');
         });
     });
 
@@ -90,7 +147,6 @@ function setupEventListeners() {
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('add-btn')) addToCart(parseInt(e.target.dataset.id));
         if (e.target.classList.contains('remove-item')) removeFromCart(parseInt(e.target.dataset.id));
-        if (e.target.classList.contains('cart-btn') || e.target.closest('.cart-section')) toggleCart();
     });
 
     document.getElementById('clearCart').addEventListener('click', clearCart);
@@ -106,7 +162,6 @@ function addToCart(id) {
     
     localStorage.setItem('cart', JSON.stringify(cart));
     renderCart();
-    // Modern toast
     showToast(`${product.name} agregado!`);
 }
 
@@ -122,30 +177,53 @@ function removeFromCart(id) {
 
 function renderCart() {
     if (cart.length === 0) {
-        cartSection.classList.add('hidden');
         orderSection.classList.add('hidden');
         cartBtn.textContent = '🛒 0';
+        cartItemsEl.innerHTML = '<p style="text-align: center; opacity: 0.7; padding: 1rem;">Tu carrito está vacío</p>';
+        const total = 0;
+        totalEl.textContent = `Total: $${total.toLocaleString()}`;
         return;
     }
     
-    cartSection.classList.remove('hidden');
+    orderSection.classList.remove('hidden');
     cartItemsEl.innerHTML = cart.map(item => `
         <div class="cart-item">
             <div>
-                <strong>${item.name}</strong> <span>x${item.quantity}</span>
+                <strong>${item.name}</strong> 
+                <div style="margin-top: 0.5rem;">
+                    <button class="quantity-btn" data-id="${item.id}" data-action="decrease" style="padding: 4px 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer; color: white; margin-right: 5px;">-</button>
+                    <span style="font-weight: 600;">${item.quantity}</span>
+                    <button class="quantity-btn" data-id="${item.id}" data-action="increase" style="padding: 4px 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; cursor: pointer; color: white; margin-left: 5px;">+</button>
+                </div>
             </div>
             <div>
-                <span>$${(item.price * item.quantity).toFixed(0)}</span>
+                <span style="display: block; margin-bottom: 0.5rem;">$${(item.price * item.quantity).toLocaleString()}</span>
                 <button class="remove-item" data-id="${item.id}" title="Eliminar">❌</button>
             </div>
         </div>
     `).join('');
     
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    totalEl.textContent = `$${total.toFixed(0)}`;
+    totalEl.textContent = `Total: $${total.toLocaleString()}`;
     cartBtn.textContent = `🛒 ${cart.reduce((sum, item) => sum + item.quantity, 0)}`;
-    
-    orderSection.classList.toggle('hidden', total === 0);
+
+    // Setup quantity buttons
+    document.querySelectorAll('.quantity-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const id = parseInt(btn.dataset.id);
+            const action = btn.dataset.action;
+            const item = cart.find(i => i.id === id);
+            
+            if (action === 'increase') {
+                item.quantity++;
+            } else if (action === 'decrease' && item.quantity > 1) {
+                item.quantity--;
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            renderCart();
+        });
+    });
 }
 
 function clearCart() {
@@ -153,10 +231,6 @@ function clearCart() {
     localStorage.removeItem('cart');
     renderCart();
     orderForm.reset();
-}
-
-function toggleCart() {
-    cartSection.classList.toggle('hidden');
 }
 
 function sendWhatsApp(e) {
@@ -173,7 +247,7 @@ function sendWhatsApp(e) {
     const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const items = cart.map(item => `${item.name} x${item.quantity} $${item.price}`).join('\n');
     
-    const message = `💎 *Pedido Joyería Rose* 💎
+    const message = `💎 *Pedido Productos Rose* 💎
 
 👤*${data.name}*
 📞 ${data.phone}
@@ -182,9 +256,10 @@ function sendWhatsApp(e) {
 📦 *Productos:*
 ${items}
 
-💰 *Total: $${total.toFixed(0)}*`;
+💰 *Total: $${total.toLocaleString()}*`;
 
     window.open(`https://api.whatsapp.com/send?phone=${WHATSAPP_PHONE}&text=${encodeURIComponent(message)}`, '_blank');
+    clearCart();
     showToast('¡Gracias por tu Compra!');
 }
 
@@ -211,6 +286,9 @@ function showToast(message, type = 'success') {
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', e => {
         e.preventDefault();
-        document.querySelector(anchor.getAttribute('href')).scrollIntoView({ behavior: 'smooth' });
+        const target = document.querySelector(anchor.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth' });
+        }
     });
 });
