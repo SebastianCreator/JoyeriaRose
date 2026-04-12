@@ -122,6 +122,16 @@ const WHATSAPP_PHONE = "573206094126";
 
 // DOM Elements
 const cartBtn = document.querySelector(".cart-btn");
+
+// Slider & Testimonials Elements
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.slider-dots .dot');
+const testimonials = document.querySelectorAll('.testimonial');
+const testimonialDots = document.querySelectorAll('.testimonials-dots .dot');
+
+let currentSlide = 0;
+let currentTestimonial = 0;
+
 const cartSection = document.querySelector(".cart-section");
 const cartOverlay = document.querySelector(".cart-overlay");
 const cartCloseBtn = document.querySelector("#cartCloseBtn");
@@ -139,6 +149,11 @@ document.addEventListener("DOMContentLoaded", () => {
   renderProducts();
   renderCart();
   setupEventListeners();
+  
+  // Initialize Sliders
+  initHeroSlider();
+  initTestimonialsSlider();
+  
   console.log(
     "DOMContentLoaded complete. Initial cart:",
     cart.length,
@@ -158,7 +173,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document
     .querySelectorAll(
-      ".product-card, .cart-section, .order-section, .highlight-card, .payment-card",
+      ".product-card, .cart-section, .order-section, .highlight-card, .payment-card, .hero-slider, .testimonials-section",
     )
     .forEach((el) => {
       el.style.opacity = "0";
@@ -167,6 +182,71 @@ document.addEventListener("DOMContentLoaded", () => {
       observer.observe(el);
     });
 });
+
+// Hero Slider Functions
+function initHeroSlider() {
+  function showSlide(index) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+    dots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+    currentSlide = index;
+  }
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => showSlide(index));
+  });
+
+  // Auto play
+  setInterval(() => {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }, 4000);
+
+  // Touch swipe
+  let startX = 0;
+  document.querySelector('.slider-container').addEventListener('touchstart', e => {
+    startX = e.touches[0].clientX;
+  });
+  document.querySelector('.slider-container').addEventListener('touchend', e => {
+    let endX = e.changedTouches[0].clientX;
+    if (startX - endX > 50) nextSlide();
+    if (endX - startX > 50) prevSlide();
+  });
+
+  function nextSlide() {
+    showSlide((currentSlide + 1) % slides.length);
+  }
+
+  function prevSlide() {
+    showSlide((currentSlide - 1 + slides.length) % slides.length);
+  }
+}
+
+// Testimonials Slider
+function initTestimonialsSlider() {
+  function showTestimonial(index) {
+    testimonials.forEach((t, i) => {
+      t.classList.toggle('active', i === index);
+    });
+    testimonialDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+    });
+    currentTestimonial = index;
+  }
+
+  testimonialDots.forEach((dot, index) => {
+    dot.addEventListener('click', () => showTestimonial(index));
+  });
+
+  // Auto play
+  setInterval(() => {
+    currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+    showTestimonial(currentTestimonial);
+  }, 5000);
+}
 
 function filterProducts(category) {
   if (category === "todos" || !category) {
